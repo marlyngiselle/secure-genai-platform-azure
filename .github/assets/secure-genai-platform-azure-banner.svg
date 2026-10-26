@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300" role="img" aria-labelledby="title desc">
+  <title id="title">Secure GenAI Platform on Azure</title>
+  <desc id="desc">Workloads flow through a shielded AI gateway into private model endpoints.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1f4d"/>
+      <stop offset="0.55" stop-color="#16367f"/>
+      <stop offset="1" stop-color="#2456c8"/>
+    </linearGradient>
+    <linearGradient id="beam" gradientUnits="userSpaceOnUse" x1="676" y1="0" x2="840" y2="0">
+      <stop offset="0" stop-color="#8fb3ff" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#8fb3ff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#c7d7ff" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#c7d7ff" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <rect width="1200" height="300" fill="url(#grid)"/>
+
+  <!-- Caller nodes on the left of the artwork -->
+  <g fill="#ffffff">
+    <circle cx="700" cy="78" r="6" fill-opacity="0.85"/>
+    <circle cx="676" cy="150" r="6" fill-opacity="0.85"/>
+    <circle cx="700" cy="222" r="6" fill-opacity="0.85"/>
+  </g>
+  <g fill="none" stroke="url(#beam)" stroke-width="2.5" stroke-linecap="round">
+    <path d="M706 78 C760 78 790 132 838 146"/>
+    <path d="M682 150 H836"/>
+    <path d="M706 222 C760 222 790 168 838 154"/>
+  </g>
+
+  <!-- Token stream dots -->
+  <g fill="#c7d7ff">
+    <circle cx="742" cy="150" r="2.5" fill-opacity="0.9"/>
+    <circle cx="764" cy="150" r="2.5" fill-opacity="0.7"/>
+    <circle cx="786" cy="150" r="2.5" fill-opacity="0.5"/>
+    <circle cx="760" cy="96" r="2.5" fill-opacity="0.6"/>
+    <circle cx="760" cy="204" r="2.5" fill-opacity="0.6"/>
+  </g>
+
+  <!-- Gateway shield -->
+  <circle cx="880" cy="150" r="92" fill="url(#glow)"/>
+  <path d="M880 82 L932 102 V146 C932 182 910 208 880 222 C850 208 828 182 828 146 V102 Z"
+        fill="url(#shield)" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2.5"/>
+  <rect x="866" y="140" width="28" height="24" rx="4" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+  <path d="M871 140 V130 C871 118 889 118 889 130 V140" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+  <circle cx="880" cy="152" r="3" fill="#ffffff"/>
+
+  <!-- Private backends on the right -->
+  <g fill="none" stroke="#8fb3ff" stroke-opacity="0.8" stroke-width="2" stroke-dasharray="4 6" stroke-linecap="round">
+    <path d="M934 136 C980 120 1000 98 1040 96"/>
+    <path d="M934 164 C980 180 1000 202 1040 204"/>
+  </g>
+  <g stroke="#ffffff" stroke-width="2" fill="#ffffff" fill-opacity="0.1">
+    <rect x="1040" y="70" width="104" height="52" rx="12"/>
+    <rect x="1040" y="178" width="104" height="52" rx="12"/>
+  </g>
+  <!-- Neural motif inside each backend -->
+  <g stroke="#c7d7ff" stroke-width="1.5" fill="none" stroke-opacity="0.9">
+    <path d="M1062 86 L1092 96 L1122 86 M1062 106 L1092 96 L1122 106"/>
+    <path d="M1062 194 L1092 204 L1122 194 M1062 214 L1092 204 L1122 214"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="1062" cy="86" r="3.5"/><circle cx="1062" cy="106" r="3.5"/>
+    <circle cx="1092" cy="96" r="4.5"/>
+    <circle cx="1122" cy="86" r="3.5"/><circle cx="1122" cy="106" r="3.5"/>
+    <circle cx="1062" cy="194" r="3.5"/><circle cx="1062" cy="214" r="3.5"/>
+    <circle cx="1092" cy="204" r="4.5"/>
+    <circle cx="1122" cy="194" r="3.5"/><circle cx="1122" cy="214" r="3.5"/>
+  </g>
+  <!-- Private boundary -->
+  <rect x="1020" y="52" width="144" height="196" rx="18" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="1.5" stroke-dasharray="2 6"/>
+
+  <!-- Wordmark -->
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" fill="#ffffff">
+    <text x="64" y="104" font-size="15" font-weight="600" letter-spacing="3.5" fill-opacity="0.75">AZURE  ·  TERRAFORM  ·  API MANAGEMENT</text>
+    <text x="64" y="160" font-size="46" font-weight="700" letter-spacing="-0.5">Secure GenAI Platform</text>
+    <text x="64" y="204" font-size="20" font-weight="400" fill-opacity="0.85">Private Azure OpenAI behind a governed AI gateway.</text>
+    <text x="64" y="232" font-size="20" font-weight="400" fill-opacity="0.85">No keys. Token quotas per team. Every call traced.</text>
+  </g>
+  <rect x="64" y="116" width="56" height="3" rx="1.5" fill="#8fb3ff"/>
+</svg>

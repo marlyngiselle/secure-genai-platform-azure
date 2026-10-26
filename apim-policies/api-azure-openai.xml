@@ -1,0 +1,67 @@
+<!--
+  API policy for the Azure OpenAI facade.
+  Order matters. Authenticate the caller, swap identity, route, meter, retry.
+  Named values used:
+    {{entra-tenant-id}}          tenant that issues caller tokens
+    {{gateway-audience}}         application ID URI callers request a token for
+    {{apim-identity-client-id}}  client ID of the gateway user-assigned identity
+-->
+<policies>
+  <inbound>
+    <base />
+    <!-- 1. Caller must present a valid Entra ID token for the gateway audience. -->
+    <validate-azure-ad-token tenant-id="{{entra-tenant-id}}" header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. A valid Entra ID access token is required.">
+      <audiences>
+        <audience>{{gateway-audience}}</audience>
+      </audiences>
+    </validate-azure-ad-token>
+    <!-- 2. Never forward a caller supplied key. The backend only accepts the gateway identity. -->
+    <set-header name="api-key" exists-action="delete" />
+    <!-- 3. Replace the caller token with a token for Azure OpenAI issued to the gateway identity. -->
+    <authentication-managed-identity resource="https://cognitiveservices.azure.com" client-id="{{apim-identity-client-id}}" />
+    <!-- 4. Route to the pool. Priority and weight live on the pool, circuit breakers on each member. -->
+    <set-backend-service backend-id="openai-backend-pool" />
+    <!-- 5. Emit prompt, completion and total token counts as custom metrics for showback. -->
+    <azure-openai-emit-token-metric namespace="genai-gateway">
+      <dimension name="API ID" />
+      <dimension name="Operation ID" />
+      <dimension name="Product ID" />
+      <dimension name="Subscription ID" />
+      <dimension name="Deployment" value='@(context.Request.MatchedParameters.GetValueOrDefault("deployment-id", "unknown"))' />
+    </azure-openai-emit-token-metric>
+  </inbound>
+  <backend>
+    <!-- 6. Retry throttling and transient errors on the next healthy pool member, with exponential backoff. -->
+    <retry condition="@(context.Response != null &amp;&amp; (context.Response.StatusCode == 429 || context.Response.StatusCode >= 500))" count="3" interval="1" max-interval="8" delta="1" first-fast-retry="true">
+      <forward-request buffer-request-body="true" buffer-response="false" timeout="120" />
+    </retry>
+  </backend>
+  <outbound>
+    <base />
+    <set-header name="x-ms-region" exists-action="delete" />
+    <set-header name="apim-request-id" exists-action="delete" />
+  </outbound>
+  <on-error>
+    <base />
+    <!-- 7. Do not leak backend details to callers. -->
+    <choose>
+      <when condition="@(context.Response.StatusCode >= 500)">
+        <return-response>
+          <set-status code="502" reason="Bad Gateway" />
+          <set-header name="Content-Type" exists-action="override">
+            <value>application/json</value>
+          </set-header>
+          <set-body>@{
+            return new JObject(
+              new JProperty("error", new JObject(
+                new JProperty("code", "upstream_unavailable"),
+                new JProperty("message", "The model backend is temporarily unavailable."),
+                new JProperty("request_id", context.RequestId.ToString())
+              ))
+            ).ToString();
+          }</set-body>
+        </return-response>
+      </when>
+    </choose>
+  </on-error>
+</policies>

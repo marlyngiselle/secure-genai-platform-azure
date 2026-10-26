@@ -3,6 +3,21 @@ output "resource_group_name" {
   value       = azurerm_resource_group.this.name
 }
 
+output "gateway_base_url" {
+  description = "Base URL that workloads call instead of Azure OpenAI. Append /deployments/{name}/chat/completions."
+  value       = "${azurerm_api_management.this.gateway_url}/${azurerm_api_management_api.openai.path}"
+}
+
+output "gateway_audience" {
+  description = "Entra ID audience callers request a token for. The scope is this value followed by /.default."
+  value       = var.gateway_audience
+}
+
+output "apim_private_ip_addresses" {
+  description = "Private IP addresses of the gateway inside the VNet."
+  value       = azurerm_api_management.this.private_ip_addresses
+}
+
 output "openai_endpoints" {
   description = "Private endpoints of the Azure OpenAI instances, by instance key. Reachable only from the VNet."
   value       = { for k, v in azurerm_cognitive_account.openai : k => v.endpoint }
@@ -11,6 +26,11 @@ output "openai_endpoints" {
 output "model_deployments" {
   description = "Deployment names available on every instance behind the gateway."
   value       = keys(var.model_deployments)
+}
+
+output "team_products" {
+  description = "APIM product ID per team, used for quota and showback queries."
+  value       = { for k, v in azurerm_api_management_product.team : k => v.product_id }
 }
 
 output "key_vault_uri" {

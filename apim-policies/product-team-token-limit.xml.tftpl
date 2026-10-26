@@ -1,0 +1,23 @@
+<!--
+  Product policy, one instance per consuming team (rendered by Terraform templatefile).
+  Throttles on tokens, not requests, so one long prompt cannot starve a team's neighbours.
+  Template inputs:
+    tokens_per_minute   sliding rate limit per subscription key
+    token_quota         hard ceiling over token_quota_period
+    token_quota_period  Hourly, Daily, Weekly, Monthly or Yearly
+-->
+<policies>
+  <inbound>
+    <base />
+    <azure-openai-token-limit counter-key="@(context.Subscription.Id)" tokens-per-minute="${tokens_per_minute}" token-quota="${token_quota}" token-quota-period="${token_quota_period}" estimate-prompt-tokens="true" remaining-tokens-header-name="x-ratelimit-remaining-tokens" tokens-consumed-header-name="x-tokens-consumed" retry-after-header-name="retry-after" />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <base />
+  </outbound>
+  <on-error>
+    <base />
+  </on-error>
+</policies>

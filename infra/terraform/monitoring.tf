@@ -22,6 +22,7 @@ locals {
     { for k, v in azurerm_cognitive_account.openai : "openai-${k}" => v.id },
     { for i, v in azurerm_cognitive_account.content_safety : "content-safety" => v.id },
     {
+      apim      = azurerm_api_management.this.id
       key-vault = azurerm_key_vault.this.id
     },
   )
